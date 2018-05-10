@@ -1,0 +1,27 @@
+#!/usr/bin/env lua
+-- copycat is published under GNU GPLv3 license (c) 2018 Daniel M. Lima
+
+if not arg[1] then
+	io.stderr:write('copycat redirects standard input to standard output while copying to <file>\nusage: copycat <file>\n')
+	return -1
+end
+
+f = io.open(arg[1], 'r')
+if f then
+	io.stderr:write('file exists, aborting.\n')
+	return -2
+end
+
+f, err = io.open(arg[1], 'w')
+if not f then
+	io.stderr.write(err)
+	return -3
+end
+
+repeat
+	s = io.read(1024)
+	if s then
+		io.write(s)
+		f:write(s)
+	end
+until not s
